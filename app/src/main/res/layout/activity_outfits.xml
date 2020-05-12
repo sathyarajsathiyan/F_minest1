@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ADFBFBFB"
+    tools:context=".Splashscreen">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alegreya_sc"
+            android:padding="10dp"
+            android:text="Outfits"
+            android:textAllCaps="true"
+            android:textSize="30sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:elevation="10dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="#D5FF9800"
+                android:layout_margin="20dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/baloo"
+                    android:padding="25dp"
+                    android:text="T-Shirt"
+                    android:textColor="#000"
+                    android:textSize="30sp" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expand all"
+                    android:textColor="#000"
+                    android:background="#00000000"
+                    android:padding="10dp"
+                    android:layout_alignParentBottom="true"/>
+
+
+
+
+            </RelativeLayout>
+
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="190dp"
+                android:src="@drawable/tshirt"
+                android:layout_marginTop="-30dp"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="#1565C0"
+
+                android:layout_margin="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/baloo"
+                    android:text="Shirt"
+                    android:textColor="#000"
+                    android:textSize="30sp"
+                    android:padding="25dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expand all"
+                    android:textColor="#000"
+                    android:background="#00000000"
+                    android:padding="10dp"
+                    android:layout_alignParentBottom="true"/>
+
+
+
+
+            </RelativeLayout>
+
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="190dp"
+                android:src="@drawable/shirt"
+                android:layout_marginTop="-40dp"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="#F4511E"
+
+                android:layout_margin="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/baloo"
+                    android:text="PullOver"
+                    android:textColor="#000"
+                    android:textSize="30sp"
+                    android:padding="25dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expand all"
+                    android:textColor="#000"
+                    android:background="#00000000"
+                    android:padding="10dp"
+                    android:layout_alignParentBottom="true"/>
+
+
+
+
+            </RelativeLayout>
+
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="190dp"
+                android:src="@drawable/pullover"
+                android:layout_marginTop="-40dp"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="#AA00FF"
+
+                android:layout_margin="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/baloo"
+                    android:text="Coat"
+                    android:textColor="#000"
+                    android:textSize="30sp"
+                    android:padding="25dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expand all"
+                    android:textColor="#000"
+                    android:background="#00000000"
+                    android:padding="10dp"
+                    android:layout_alignParentBottom="true"/>
+
+
+
+
+            </RelativeLayout>
+
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="190dp"
+                android:src="@drawable/coat"
+                android:layout_marginTop="-40dp"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="#7C4DFF"
+
+                android:layout_margin="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/baloo"
+                    android:text="Trouser"
+                    android:textColor="#000"
+                    android:textSize="30sp"
+                    android:padding="25dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expand all"
+                    android:textColor="#000"
+                    android:background="#00000000"
+                    android:padding="10dp"
+                    android:layout_alignParentBottom="true"/>
+
+
+
+
+            </RelativeLayout>
+
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="190dp"
+                android:src="@drawable/trouser"
+                android:layout_marginTop="-40dp"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+
+
+
+
+
+    </LinearLayout>
+
+
+
+</ScrollView>

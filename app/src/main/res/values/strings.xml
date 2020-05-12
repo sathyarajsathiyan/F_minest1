@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">minest1</string>
+    <string name="yes">Yes</string>
+
+    <string name="no">No</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="open_drawer">open_drawer</string>
+    <string name="close_drawer">close_drawer</string>
+    <string name="rationale_camera">This app needs access to your camera so you can take pictures.</string>
+    <string name="rationale_storage">This app needs access to your storage so you can take pictures.</string>
+    <string name="returned_from_app_settings_to_activity">
+
+        Returned from app settings to MainActivity with the following permissions:
+
+        \n\nCamera: %s
+
+        \nLocation &amp; Contacts: %s
+
+        \nSMS: %s
+
+    </string>
+</resources>
