@@ -16,7 +16,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".VirtualCloset"></activity>
+        <activity android:name=".Trouser"></activity>
+        <activity android:name=".Coat" />
+        <activity android:name=".Pullover" />
+        <activity android:name=".Shirt" />
+        <activity android:name=".Tshirt" />
+        <activity android:name=".VirtualCloset" />
         <activity android:name=".Settings" />
         <activity android:name=".Profile" />
         <activity android:name=".Outfits" />

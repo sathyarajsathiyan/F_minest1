@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -15,7 +16,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.textfield.*;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class Login extends AppCompatActivity {
     DataHelper dataHelper;
@@ -103,7 +105,11 @@ public class Login extends AppCompatActivity {
         //Handling validation for Password field
         if (Email.isEmpty()) {
             valid = false;
-            txt_email.setError("Please enter valid Username!");
+            txt_email.setError("Please enter Email !");
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+            valid = false;
+            txt_email.setError("please enter a valid Email Address !");
+
         } else {
             valid = true;
             txt_email.setError(null);
@@ -112,7 +118,7 @@ public class Login extends AppCompatActivity {
         //Handling validation for Password field
         if (Password.isEmpty()) {
             valid = false;
-            txt_password.setError("Please enter valid Password!");
+            txt_password.setError("Please enter  Password!");
         } else if (Password.length() < 8) {
             valid = false;
             txt_password.setError("Password is to short!");

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashbordMain">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,21 +16,34 @@
             android:background="#FFFFFF">
 
 
-
-
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <Button
                 android:id="@+id/camera"
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
-                android:clickable="true"
+                android:background="@drawable/custom_button_camera"
+                android:fontFamily="sans-serif"
+                android:text="Camera"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/predict"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+            <Button
+                android:id="@+id/predict"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_button_predict"
+                android:elevation="2dp"
+                android:fontFamily="sans-serif"
+                android:text="Predict"
+                android:textSize="20dp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.066"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@drawable/camera" />
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/textView"
@@ -37,14 +51,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-
-                android:text="Today"
-                android:textSize="30sp"
-
-                app:fontFamily="@font/timmana"
+                android:fontFamily="sans-serif"
+                android:text="Yesterday"
+                android:textColor="#000"
+                android:textSize="20dp"
                 app:layout_constraintEnd_toStartOf="@+id/imageView"
                 app:layout_constraintStart_toStartOf="parent"
-               />
+                tools:ignore="MissingConstraints" />
 
 
             <ImageView
@@ -55,7 +68,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView"
 
-                app:srcCompat="@drawable/transparent_fanshion" />
+                app:srcCompat="@drawable/transparent_fanshion"
+                tools:ignore="MissingConstraints" />
 
             <LinearLayout
                 android:id="@+id/linearLayout"
@@ -64,6 +78,7 @@
                 android:layout_margin="10dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="16dp"
+
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -72,11 +87,12 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/featured_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="414dp"
+                    android:layout_width="394dp"
+                    android:layout_height="518dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="64dp"
+                    android:background="#A9FFFFFF"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
@@ -89,6 +105,8 @@
 
             </LinearLayout>
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
