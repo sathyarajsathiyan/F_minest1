@@ -35,7 +35,7 @@ public class FeaturedAdapter  extends RecyclerView.Adapter<FeaturedAdapter.Featu
         FeaturedHelperClass featuredHelperClass= featuredLocations.get(position);
         holder.img1.setImageResource(featuredHelperClass.getImg1());
         holder.img2.setImageResource(featuredHelperClass.getImg2());
-        holder.txt1.setText(featuredHelperClass.getTxt1());
+
         holder.txt2.setText(featuredHelperClass.getTxt2());
         holder.txt3.setText(featuredHelperClass.getTxt3());
 
@@ -58,8 +58,8 @@ public class FeaturedAdapter  extends RecyclerView.Adapter<FeaturedAdapter.Featu
             //hooks
             img1=itemView.findViewById(R.id.img1);
             img2=itemView.findViewById(R.id.img2);
-            txt1=itemView.findViewById(R.id.like);
-            txt2=itemView.findViewById(R.id.dislike);
+
+            txt2=itemView.findViewById(R.id.trash);
             txt3=itemView.findViewById(R.id.worn);
 
         }

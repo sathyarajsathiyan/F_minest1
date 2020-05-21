@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -28,10 +29,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.minest1.HomeAdapter.FeaturedAdapter;
 import com.example.minest1.HomeAdapter.FeaturedHelperClass;
+import com.example.minest1.HomeAdapter.Priview_closet;
 import com.example.minest1.util.DataPart;
 import com.example.minest1.util.UrlClass;
 import com.example.minest1.util.VolleyMultipartRequest;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,9 +57,9 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
         EasyPermissions.RationaleCallbacks {
     public static final int CAMERA_REQUEST_CODE = 1996;
-    RecyclerView featuredRecycler;
+    RecyclerView featuredRecycler,preview_Recycler;
     RecyclerView.Adapter adapter;
-    FloatingActionButton camera;
+    Button camera;
     EditText editTextTags;
     String currentPhotoPath;
     String pathFile;
@@ -69,6 +70,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     private File fileName;
     private ImageView cameraImage;
     private String encodedString;
+    Priview_closet preview_closet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,15 +90,31 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
         featuredRecycler = findViewById(R.id.featured_recycler);
         featuredRecycler();
+        preview_Recycler=findViewById(R.id.preview_recycler);
+        preview_Recycler();
+
+    }
+
+    private void preview_Recycler() {
+        List<Integer> img1;
+        img1=new ArrayList<Integer>();
+
+        //preview_Recycler.setHasFixedSize(true);
+        preview_Recycler. setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        img1.add(R.drawable.transparent_fanshion);
+        img1.add(R.drawable.transparent_fanshion);
+        img1.add(R.drawable.transparent_fanshion);
+        preview_closet=new Priview_closet(this,img1);
+        preview_Recycler.setAdapter(preview_closet);
     }
 
     private void featuredRecycler() {
         featuredRecycler.setHasFixedSize(true);
         featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
-        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_1, R.drawable.comb_1_2, "Like", "Dislike", "Wear"));
-        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_2, R.drawable.comb_1_2, "Like", "Dislike", "Wear"));
-        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_3_top, R.drawable.comb_3, "Like", "DisLike", "Wear"));
+        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_1, R.drawable.comb_1_2,  "Wear", "Dislike"));
+        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_2, R.drawable.comb_1_2, "Wear",  "Dislike"));
+        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_3_top, R.drawable.comb_3, "Wear",  "DisLike"));
         // featuredLocations.add(new FeaturedHelperClass(R.drawable.add,R.drawable.add,"Like","DisLike","Wear"));
         //featuredLocations.add(new FeaturedHelperClass(null,null,"like","dislke","ware"));
 

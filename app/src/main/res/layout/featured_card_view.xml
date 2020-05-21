@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="360dp"
-    android:layout_height="400dp"
+    android:layout_height="384dp"
     android:layout_margin="10dp"
     android:background="#A08BAC"
     app:cardCornerRadius="5dp"
-    app:cardElevation="8dp">
+    app:cardElevation="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,45 +37,32 @@
 
 
             <TextView
-                android:id="@+id/like"
-                android:layout_width="79dp"
-                android:layout_height="33dp"
-                android:layout_marginStart="16dp"
-                android:text="like"
-
-                android:textAlignment="center"
-                android:textColor="#03A9F4"
-                android:textSize="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/dislike"
-                android:layout_width="71dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:text="dislike"
-                android:textAlignment="center"
-                android:textColor="#E91E63"
-                android:textSize="20dp"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.24"
-                app:layout_constraintStart_toEndOf="@+id/like" />
-
-            <TextView
                 android:id="@+id/worn"
-                android:layout_width="71dp"
+                android:layout_width="wrap_content"
                 android:layout_height="33dp"
-                android:layout_marginStart="44dp"
-                android:text="wear"
 
+                android:text="wear"
                 android:textAlignment="center"
                 android:textColor="#4CAF50"
-                android:textSize="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/dislike" />
+                android:textSize="25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.192"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteY="-1dp" />
+
+            <TextView
+                android:id="@+id/trash"
+                android:layout_width="71dp"
+                android:layout_height="32dp"
+                android:text="Trash   "
+                android:textAlignment="center"
+                android:textColor="#E91E63"
+                android:textSize="25dp"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/worn"
+                tools:ignore="MissingConstraints" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

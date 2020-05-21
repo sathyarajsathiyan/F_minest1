@@ -52,7 +52,7 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
         return top_img.size();
     }
 
-    public class ViewHolder extends  RecyclerView.ViewHolder{
+    public static class ViewHolder extends  RecyclerView.ViewHolder{
         ImageView top_img;
         ImageView button_img;
         public ViewHolder(@NonNull View itemView) {
