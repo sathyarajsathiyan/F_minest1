@@ -133,7 +133,7 @@ public class Dashboard extends AppCompatActivity {
                         startActivity(new Intent(Dashboard.this, Profile.class));
                         finish();
                         break;
-                    case R.id.nav_closet:
+                    case R.id.nav_history:
                         startActivity(new Intent(Dashboard.this, VirtualCloset.class));
                         finish();
 

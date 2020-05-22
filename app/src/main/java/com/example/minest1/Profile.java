@@ -22,7 +22,7 @@ public class Profile extends Dashboard {
     TextInputLayout txt_fullname ,txt_email ,txt_date ,txt_favclr ,txt_pass ;
     TextView Username,email,txt_edit,txt_cpass;
     Button btn_logout,saveButtonPassword;
-
+    private int count = 0;
     SharedPreferences pref; //Declaration SharedPreferences
     Cursor cursor; //Declaration Cursor
     DataHelper dataHelper; //Declaration SqliteHelper
@@ -221,5 +221,16 @@ public class Profile extends Dashboard {
 
 
         return valid1;
+    }
+    public void onBackPressed() {
+        count++;
+        if (count >= 1) {
+            Intent intent = new Intent(Profile.this, DashbordMain.class);
+            startActivity(intent);
+            finish();
+            super.onBackPressed();
+        }
+
+
     }
 }

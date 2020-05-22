@@ -2,7 +2,9 @@ package com.example.minest1;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,15 +27,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.minest1.HomeAdapter.FeaturedAdapter;
 import com.example.minest1.HomeAdapter.FeaturedHelperClass;
+import com.example.minest1.HomeAdapter.Priview;
 import com.example.minest1.HomeAdapter.Priview_closet;
 import com.example.minest1.util.DataPart;
-import com.example.minest1.util.UrlClass;
 import com.example.minest1.util.VolleyMultipartRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,30 +58,33 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
-public class DashbordMain extends Dashboard implements EasyPermissions.PermissionCallbacks,
-
-        EasyPermissions.RationaleCallbacks {
+public class DashbordMain extends Dashboard implements EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
     public static final int CAMERA_REQUEST_CODE = 1996;
-    RecyclerView featuredRecycler,preview_Recycler;
+    RecyclerView featuredRecycler, preview_Recycler;
+    SharedPreferences pref, sharedpreferences;
     RecyclerView.Adapter adapter;
-    Button camera;
+    Button camera, predict;
     EditText editTextTags;
     String currentPhotoPath;
     String pathFile;
     Bitmap bitmap;
-    Uri   mCapturedImageURI;
+    Uri mCapturedImageURI;
     private static final int RC_CAMERA_PERM = 123;
-    private static final int RC_STORAGE=143;
+    private static final int RC_STORAGE = 143;
     private File fileName;
+    List<Priview>priviews;
     private ImageView cameraImage;
     private String encodedString;
     Priview_closet preview_closet;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashbord_main);
-        EasyPermissions.requestPermissions(this,getString(R.string.rationale_storage),RC_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        predict = findViewById(R.id.predict);
+
+        EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage), RC_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         camera = findViewById(R.id.camera);
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,34 +95,58 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
             }
         });
-
+        predict.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DashbordMain.this, "Predict", Toast.LENGTH_SHORT).show();
+            }
+        });
         featuredRecycler = findViewById(R.id.featured_recycler);
         featuredRecycler();
-        preview_Recycler=findViewById(R.id.preview_recycler);
+        preview_Recycler = findViewById(R.id.preview_recycler);
         preview_Recycler();
 
     }
 
     private void preview_Recycler() {
-        List<Integer> img1;
-        img1=new ArrayList<Integer>();
+        String PUrl = "http://192.168.1.3:4000/Dress";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, PUrl, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject objj = response.getJSONObject(i);
+                        Priview priview = new Priview();
+                        priview.setImg1(objj.getInt("image"));
 
-        //preview_Recycler.setHasFixedSize(true);
-        preview_Recycler. setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        img1.add(R.drawable.transparent_fanshion);
-        img1.add(R.drawable.transparent_fanshion);
-        img1.add(R.drawable.transparent_fanshion);
-        preview_closet=new Priview_closet(this,img1);
-        preview_Recycler.setAdapter(preview_closet);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                  preview_Recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                   preview_closet = new Priview_closet(getApplicationContext(),priviews)   ;
+            preview_Recycler.setAdapter(preview_closet);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show(); 
+
+            }
+        }) ;
+
+              Volley.newRequestQueue(this).add(jsonArrayRequest);
+
     }
 
     private void featuredRecycler() {
         featuredRecycler.setHasFixedSize(true);
         featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
-        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_1, R.drawable.comb_1_2,  "Wear", "Dislike"));
-        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_2, R.drawable.comb_1_2, "Wear",  "Dislike"));
-        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_3_top, R.drawable.comb_3, "Wear",  "DisLike"));
+        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_1, R.drawable.comb_1_2, "Wear", "Trash"));
+        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_2, R.drawable.comb_1_2, "Wear", "Trash"));
+        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_3_top, R.drawable.comb_3, "Wear", "Trash"));
         // featuredLocations.add(new FeaturedHelperClass(R.drawable.add,R.drawable.add,"Like","DisLike","Wear"));
         //featuredLocations.add(new FeaturedHelperClass(null,null,"like","dislke","ware"));
 
@@ -123,6 +155,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
 
     }
+
     @Override
 
     public void onRationaleAccepted(int requestCode) {
@@ -160,19 +193,19 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     }
 
 
-
-
     private boolean hasCameraPermission() {
 
         return EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA);
 
     }
+
     private boolean hasStoragePermission() {
         EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         return EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
 
     }
+
     @Override
 
     public void onRationaleDenied(int requestCode) {
@@ -203,7 +236,6 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
      * */
 
 
-
     @AfterPermissionGranted(RC_CAMERA_PERM)
 
     public void cameraTask() {
@@ -222,11 +254,10 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                     startActivityForResult(takepic, CAMERA_REQUEST_CODE);
 
                 }*/
-            if(takepic.resolveActivity(getPackageManager()) != null) {
+            if (takepic.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takepic,
                         CAMERA_REQUEST_CODE);
             }
-
 
 
             Toast.makeText(this, "TODO: Camera things", Toast.LENGTH_LONG).show();
@@ -235,7 +266,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
             // Ask for one permission
 
-            EasyPermissions.requestPermissions(this,getString(R.string.rationale_camera),RC_CAMERA_PERM, Manifest.permission.CAMERA);
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_camera), RC_CAMERA_PERM, Manifest.permission.CAMERA);
 
 
         }
@@ -257,16 +288,14 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     }
 
 
-
-
     @SuppressLint("StringFormatMatches")
     @Override
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK ){
-            if ( requestCode == CAMERA_REQUEST_CODE && null!= data    ) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CAMERA_REQUEST_CODE && null != data) {
                 Uri uri = data.getData();
 
                 try {
@@ -305,7 +334,6 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                 //encodedString = Base64.encodeToString(byte_arr, 0);*/
 
 
-
             }
 
             if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
@@ -317,22 +345,21 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
                 // Do something after user returned from app settings screen, like showing a Toast.
 
-                Toast.makeText(this, getString(R.string.returned_from_app_settings_to_activity, hasCameraPermission() ? yes : no, hasStoragePermission() ? yes : no),Toast.LENGTH_LONG).show();
-                Toast.makeText(this, getString(R.string.returned_from_app_settings_to_activity,  hasStoragePermission() ? yes : no),Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.returned_from_app_settings_to_activity, hasCameraPermission() ? yes : no, hasStoragePermission() ? yes : no), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.returned_from_app_settings_to_activity, hasStoragePermission() ? yes : no), Toast.LENGTH_LONG).show();
 
             }
         }
-
 
 
     }
 
     private void uploadImage() {
         RequestQueue rq = Volley.newRequestQueue(this);
-        String url="http://0.0.0.0:9000/predict";
+        String url = "http://0.0.0.0:9000/predict";
         Log.d("URL", url);
         long milli = System.currentTimeMillis();
-        final String Img_name = "INCI_IMG_"+ milli + ".png";
+        final String Img_name = "INCI_IMG_" + milli + ".png";
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 url, new Response.Listener<String>() {
 
@@ -363,9 +390,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                         "Cannot connect to server", Toast.LENGTH_LONG)
                         .show();
             }
-        })
-
-        {
+        }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
@@ -393,35 +418,41 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         rq.add(stringRequest);
     }
 
-    private  void UploadOImage(final Bitmap photo){
+    private void UploadOImage(final Bitmap photo) {
         long milli = System.currentTimeMillis();
-        final String Img_name = "INCI_IMG_"+ milli + ".png";
-        //String mUrl = "http://192.168.1.5:8000/files";
+        final String Img_name = "INCI_IMG_" + milli + ".jpg";
+
+        String mUrl = "http://192.168.1.3:8000/predict";
         //our custom volley request
-        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, UrlClass.PREDICT_URL,
-                new Response.Listener<NetworkResponse>() {
-                    @Override
-                    public void onResponse(NetworkResponse response) {
-                        try {
-                            JSONObject obj = new JSONObject(new String(response.data));
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, mUrl, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                try {
+                    JSONObject obj = new JSONObject(new String(response.data));
 
-                           // JSONArray array = obj.getJSONArray("array");
-                           // for(int i=0; i<array.length(); i++){
-                                //console.log(i);
-                            //}
+                    // JSONArray array = obj.getJSONArray("array");
+                    // for(int i=0; i<array.length(); i++){
+                    //console.log(i);
+                    // }
 
-                          //  boolean boo = obj.getBoolean("boolean" );
-                           // double dd = obj.getDouble("doubkekey");
-                           // String color = obj.getString("color");
+                    //  boolean boo = obj.getBoolean("boolean" );
+                    // double dd = obj.getDouble("doubkekey");
+                    String label = obj.getString("label");
+                    String color = obj.getString("color");
+                    String path = obj.getString("path");
+                    // String user_id = obj.getString("user_id");
+
+                    Toast.makeText(DashbordMain.this, "" + color, Toast.LENGTH_SHORT).show();
+
+                    Dbupload(label, color, path);
 
 
-
-                            //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
+                    Toast.makeText(getApplicationContext(), obj.getString("label"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -447,8 +478,10 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
              * */
             @Override
             protected Map<String, DataPart> getByteData() {
+
                 Map<String, DataPart> params = new HashMap<>();
                 params.put("file", new DataPart(Img_name, getFileDataFromDrawable(photo)));
+                // params.put("user_id", new DataPart(session_id));
                 return params;
             }
         };
@@ -456,6 +489,49 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         //adding the request to volley
         Volley.newRequestQueue(this).add(volleyMultipartRequest);
     }
+
+    private void Dbupload(final String label, final String color, final String path) {
+        pref = getSharedPreferences("SharedPref", Context.MODE_PRIVATE);
+        final String session_id = pref.getString("session", null);
+        String dbUrl = "http://192.168.1.3:4000/Dress";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, dbUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
+                    //  jsonObject.put("user_id",session_id);
+                    //jsonObject.put("image", path);
+                    // jsonObject.put("type_name", label);
+                    // jsonObject.put("color", color);
+                    Toast.makeText(DashbordMain.this, response.toString(), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", session_id);
+                params.put("image", path);
+                params.put("type_name", label);
+                params.put("color", color);
+                return params;
+            }
+        };
+        Volley.newRequestQueue(this).add(jsonObjectRequest);
+
+    }
+
 
     /*
      * The method is taking Bitmap as an argument
@@ -472,4 +548,9 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         return byteArrayOutputStream.toByteArray();
     }
 
+    // uplodaing the data to the DBserver
+
+
 }
+
+
