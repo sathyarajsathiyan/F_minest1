@@ -1,34 +1,26 @@
 package com.example.minest1.HomeAdapter;
 
 public class FeaturedHelperClass {
-    int img1,img2;
-    String txt2,txt3;
+    String img1,img2;
 
-    public FeaturedHelperClass(Integer img1, Object img2,  String txt2, String txt3) {
+
+    public FeaturedHelperClass(String img1, String img2) {
         this.img1 = img1;
-        this.img2 = (int) img2;
+        this.img2 =  img2;
 
-        this.txt2 = txt2;
-        this.txt3 = txt3;
+
 
     }
-    public int getImg1() {
+    public String getImg1() {
         return img1;
     }
 
-    public int getImg2() {
+    public String getImg2() {
         return img2;
     }
 
 
 
-    public String getTxt2() {
-        return txt2;
-    }
-
-    public String getTxt3() {
-        return txt3;
-    }
 
 
 }

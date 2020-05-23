@@ -27,8 +27,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.minest1.HomeAdapter.FeaturedAdapter;
@@ -38,7 +36,6 @@ import com.example.minest1.HomeAdapter.Priview_closet;
 import com.example.minest1.util.DataPart;
 import com.example.minest1.util.VolleyMultipartRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,7 +69,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_STORAGE = 143;
     private File fileName;
-    List<Priview>priviews;
+    List<Priview> priviews;
     private ImageView cameraImage;
     private String encodedString;
     Priview_closet preview_closet;
@@ -104,51 +101,23 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         featuredRecycler = findViewById(R.id.featured_recycler);
         featuredRecycler();
         preview_Recycler = findViewById(R.id.preview_recycler);
-        preview_Recycler();
+        //preview_Recycler();
 
     }
 
-    private void preview_Recycler() {
-        String PUrl = "http://192.168.1.3:4000/Dress";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, PUrl, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        JSONObject objj = response.getJSONObject(i);
-                        Priview priview = new Priview();
-                        priview.setImg1(objj.getInt("image"));
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-                  preview_Recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                   preview_closet = new Priview_closet(getApplicationContext(),priviews)   ;
-            preview_Recycler.setAdapter(preview_closet);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show(); 
-
-            }
-        }) ;
-
-              Volley.newRequestQueue(this).add(jsonArrayRequest);
-
-    }
 
     private void featuredRecycler() {
         featuredRecycler.setHasFixedSize(true);
         featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
-        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_1, R.drawable.comb_1_2, "Wear", "Trash"));
-        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_2, R.drawable.comb_1_2, "Wear", "Trash"));
-        featuredLocations.add(new FeaturedHelperClass(R.drawable.comb_3_top, R.drawable.comb_3, "Wear", "Trash"));
+        featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
+        featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
+        featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
         // featuredLocations.add(new FeaturedHelperClass(R.drawable.add,R.drawable.add,"Like","DisLike","Wear"));
         //featuredLocations.add(new FeaturedHelperClass(null,null,"like","dislke","ware"));
+
+        //From Picasso URL Loading
+        //Picasso.get().load("http://i.imgur.com/DvpvklR.png").into();
 
         adapter = new FeaturedAdapter(featuredLocations);
         featuredRecycler.setAdapter(adapter);
@@ -422,7 +391,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         long milli = System.currentTimeMillis();
         final String Img_name = "INCI_IMG_" + milli + ".jpg";
 
-        String mUrl = "http://192.168.1.3:8000/predict";
+        String mUrl = "http://192.168.1.4:8000/predict";
         //our custom volley request
         VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, mUrl, new Response.Listener<NetworkResponse>() {
             @Override
@@ -443,11 +412,11 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                     // String user_id = obj.getString("user_id");
 
                     Toast.makeText(DashbordMain.this, "" + color, Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getApplicationContext(), obj.getString("label"), Toast.LENGTH_SHORT).show();
                     Dbupload(label, color, path);
 
 
-                    Toast.makeText(getApplicationContext(), obj.getString("label"), Toast.LENGTH_SHORT).show();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -493,13 +462,14 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     private void Dbupload(final String label, final String color, final String path) {
         pref = getSharedPreferences("SharedPref", Context.MODE_PRIVATE);
         final String session_id = pref.getString("session", null);
-        String dbUrl = "http://192.168.1.3:4000/Dress";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, dbUrl, null, new Response.Listener<JSONObject>() {
+        //String dbUrl = "http://192.168.1.3:4000/Dress"+"?type_name="+type_name_data+"&user_id="+user_id_data;
+        String dbUrl = "http://192.168.1.4:4000/Dress";
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, dbUrl,  new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(String response) {
                 try {
-                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                    //  jsonObject.put("user_id",session_id);
+                    Log.d("TAG", "  response.toString()");
+                    JSONObject jsonObject= new JSONObject(response);
                     //jsonObject.put("image", path);
                     // jsonObject.put("type_name", label);
                     // jsonObject.put("color", color);
@@ -519,13 +489,19 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
         }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_id", session_id);
                 params.put("image", path);
                 params.put("type_name", label);
                 params.put("color", color);
                 return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header = new HashMap<String, String>();
+                return header;
             }
         };
         Volley.newRequestQueue(this).add(jsonObjectRequest);

@@ -1,15 +1,18 @@
 package com.example.minest1.HomeAdapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.minest1.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -33,11 +36,19 @@ public class FeaturedAdapter  extends RecyclerView.Adapter<FeaturedAdapter.Featu
     @Override
     public void onBindViewHolder(@NonNull FeaturedViewHolder holder, int position) {
         FeaturedHelperClass featuredHelperClass= featuredLocations.get(position);
-        holder.img1.setImageResource(featuredHelperClass.getImg1());
-        holder.img2.setImageResource(featuredHelperClass.getImg2());
+        //holder.img1.setImageResource(featuredHelperClass.getImg1());
+        //holder.img2.setImageResource(featuredHelperClass.getImg2());
 
-        holder.txt2.setText(featuredHelperClass.getTxt2());
-        holder.txt3.setText(featuredHelperClass.getTxt3());
+        Picasso.get().load(featuredHelperClass.getImg1()).into(holder.img1);
+        Picasso.get().load(featuredHelperClass.getImg2()).into(holder.img2);
+       holder.trash.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Log.d("TAG", "onClick:Trash ");
+               Toast.makeText(v.getContext(), "Trash", Toast.LENGTH_SHORT).show();
+
+           }
+       });
 
 
 
@@ -50,7 +61,7 @@ public class FeaturedAdapter  extends RecyclerView.Adapter<FeaturedAdapter.Featu
 
     public static  class FeaturedViewHolder extends RecyclerView.ViewHolder{
         ImageView img1,img2;
-        TextView txt1,txt2,txt3;
+       Button trash,worn;
 
 
         public FeaturedViewHolder(@NonNull View itemView) {
@@ -59,8 +70,8 @@ public class FeaturedAdapter  extends RecyclerView.Adapter<FeaturedAdapter.Featu
             img1=itemView.findViewById(R.id.img1);
             img2=itemView.findViewById(R.id.img2);
 
-            txt2=itemView.findViewById(R.id.trash);
-            txt3=itemView.findViewById(R.id.worn);
+            trash=itemView.findViewById(R.id.trash);
+            worn=itemView.findViewById(R.id.worn);
 
         }
     }
