@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.minest1.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Priview_closet extends RecyclerView.Adapter<Priview_closet.ViewHolder> {
-    List<Priview>img1;
+    List<Priview> img1;
+    ArrayList<Priview>priviewsLocation;
     LayoutInflater inflater;
 
     public Priview_closet(Context context, List<Priview> img1) {
@@ -35,7 +37,8 @@ public class Priview_closet extends RecyclerView.Adapter<Priview_closet.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Picasso.get().load(img1.get(position).getImg1()).into(holder.img1);
+        Priview priview=priviewsLocation.get(position);
+        Picasso.get().load(priview.getImg1()).into(holder.img1);
         //holder.img1.setImageResource(img1.get(position));
     }
 

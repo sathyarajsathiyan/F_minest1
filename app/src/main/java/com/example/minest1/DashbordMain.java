@@ -27,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.minest1.HomeAdapter.FeaturedAdapter;
@@ -34,8 +35,10 @@ import com.example.minest1.HomeAdapter.FeaturedHelperClass;
 import com.example.minest1.HomeAdapter.Priview;
 import com.example.minest1.HomeAdapter.Priview_closet;
 import com.example.minest1.util.DataPart;
+import com.example.minest1.util.UrlClass;
 import com.example.minest1.util.VolleyMultipartRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -73,6 +76,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     private ImageView cameraImage;
     private String encodedString;
     Priview_closet preview_closet;
+    List<Priview> img1;
 
 
     @Override
@@ -80,7 +84,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashbord_main);
         predict = findViewById(R.id.predict);
-
+        img1 = new ArrayList<Priview>();
         EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage), RC_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         camera = findViewById(R.id.camera);
         camera.setOnClickListener(new View.OnClickListener() {
@@ -101,8 +105,47 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         featuredRecycler = findViewById(R.id.featured_recycler);
         featuredRecycler();
         preview_Recycler = findViewById(R.id.preview_recycler);
-        //preview_Recycler();
+        preview_Recycler();
 
+    }
+
+    private void preview_Recycler() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        final String Url = "http://192.168.1.4:4000/Dress";
+       // UrlClass obj = new UrlClass();
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, Url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject Object = response.getJSONObject(i);
+                        Priview priview = new Priview();
+                        String label = Object.getString("type_name");
+                        String  img_path = UrlClass.IMAGE_BASE_URL + Object.getString("image");
+                        priview.setImg1(img_path);
+
+                        img1.add(priview);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                preview_Recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                preview_closet = new Priview_closet(getApplicationContext(), img1);
+                preview_Recycler.setAdapter(preview_closet);
+                preview_closet.notifyDataSetChanged();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+queue.add(jsonArrayRequest);
     }
 
 
@@ -110,7 +153,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         featuredRecycler.setHasFixedSize(true);
         featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
-        featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
+        featuredLocations.add(new FeaturedHelperClass("http://192.168.1.4:4000/assets/images/1/5.jpeg", "http://i.imgur.com/DvpvklR.png"));
         featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
         featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
         // featuredLocations.add(new FeaturedHelperClass(R.drawable.add,R.drawable.add,"Like","DisLike","Wear"));
@@ -416,7 +459,6 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                     Dbupload(label, color, path);
 
 
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -464,12 +506,12 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         final String session_id = pref.getString("session", null);
         //String dbUrl = "http://192.168.1.3:4000/Dress"+"?type_name="+type_name_data+"&user_id="+user_id_data;
         String dbUrl = "http://192.168.1.4:4000/Dress";
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, dbUrl,  new Response.Listener<String>() {
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, dbUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     Log.d("TAG", "  response.toString()");
-                    JSONObject jsonObject= new JSONObject(response);
+                    JSONObject jsonObject = new JSONObject(response);
                     //jsonObject.put("image", path);
                     // jsonObject.put("type_name", label);
                     // jsonObject.put("color", color);

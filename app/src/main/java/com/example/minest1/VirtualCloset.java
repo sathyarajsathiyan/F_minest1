@@ -41,7 +41,7 @@ public class VirtualCloset extends DashbordMain {
         closetAdapter = new ClosetAdapter(this, top_img, button_img);
 
 
-        closet.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        closet.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
 
         closet.setAdapter(closetAdapter);
@@ -50,7 +50,7 @@ public class VirtualCloset extends DashbordMain {
 
     public void onBackPressed() {
         count++;
-        if (count == 1) {
+        if (count >= 1) {
             Intent intent = new Intent(VirtualCloset.this, DashbordMain.class);
             startActivity(intent);
             finish();
