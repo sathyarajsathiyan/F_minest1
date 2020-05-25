@@ -25,6 +25,7 @@ public class Outfits extends Dashboard {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Outfits.this,Tshirt.class);
+                intent.putExtra("type_name","t_shirt");
                 startActivity(intent);
             }
         });
@@ -32,6 +33,7 @@ public class Outfits extends Dashboard {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Outfits.this,Shirt.class);
+                intent.putExtra("type_name","");
                 startActivity(intent);
             }
         });

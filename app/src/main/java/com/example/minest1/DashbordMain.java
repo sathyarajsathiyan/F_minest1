@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,11 +33,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.minest1.HomeAdapter.FeaturedAdapter;
 import com.example.minest1.HomeAdapter.FeaturedHelperClass;
-import com.example.minest1.HomeAdapter.Priview;
-import com.example.minest1.HomeAdapter.Priview_closet;
+import com.example.minest1.HomeAdapter.PreviewAdapter;
+import com.example.minest1.HomeAdapter.PreviewItem;
 import com.example.minest1.util.DataPart;
 import com.example.minest1.util.UrlClass;
 import com.example.minest1.util.VolleyMultipartRequest;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,7 +62,7 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class DashbordMain extends Dashboard implements EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
     public static final int CAMERA_REQUEST_CODE = 1996;
-    RecyclerView featuredRecycler, preview_Recycler;
+    RecyclerView featuredRecycler;
     SharedPreferences pref, sharedpreferences;
     RecyclerView.Adapter adapter;
     Button camera, predict;
@@ -72,11 +74,13 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_STORAGE = 143;
     private File fileName;
-    List<Priview> priviews;
+    private RecyclerView Preview_recycler;
+    private PreviewAdapter mPreviewAdapter;
+    private ArrayList<PreviewItem> mPreviewItem;
     private ImageView cameraImage;
     private String encodedString;
-    Priview_closet preview_closet;
-    List<Priview> img1;
+    SweetAlertDialog pDialog;
+    private int count = 0;
 
 
     @Override
@@ -84,7 +88,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashbord_main);
         predict = findViewById(R.id.predict);
-        img1 = new ArrayList<Priview>();
+
         EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage), RC_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         camera = findViewById(R.id.camera);
         camera.setOnClickListener(new View.OnClickListener() {
@@ -104,48 +108,51 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         });
         featuredRecycler = findViewById(R.id.featured_recycler);
         featuredRecycler();
-        preview_Recycler = findViewById(R.id.preview_recycler);
+        Preview_recycler = findViewById(R.id.preview_recycler);
+        Preview_recycler.setHasFixedSize(true);
+        Preview_recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mPreviewItem = new ArrayList<>();
+
         preview_Recycler();
+
 
     }
 
     private void preview_Recycler() {
         RequestQueue queue = Volley.newRequestQueue(this);
         final String Url = "http://192.168.1.4:4000/Dress";
-       // UrlClass obj = new UrlClass();
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, Url, null, new Response.Listener<JSONArray>() {
+        // UrlClass obj = new UrlClass();
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, Url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                mPreviewItem.clear();
                 for (int i = 0; i < response.length(); i++) {
                     try {
-                        JSONObject Object = response.getJSONObject(i);
-                        Priview priview = new Priview();
-                        String label = Object.getString("type_name");
-                        String  img_path = UrlClass.IMAGE_BASE_URL + Object.getString("image");
-                        priview.setImg1(img_path);
 
-                        img1.add(priview);
+
+                        JSONObject Dress = response.getJSONObject(i);
+                        String imageUrl = UrlClass.IMAGE_BASE_URL + Dress.getString("image");
+
+                        mPreviewItem.add(new PreviewItem(imageUrl));
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                }
-                preview_Recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                preview_closet = new Priview_closet(getApplicationContext(), img1);
-                preview_Recycler.setAdapter(preview_closet);
-                preview_closet.notifyDataSetChanged();
 
+                }
+                mPreviewAdapter = new PreviewAdapter(getApplicationContext(), mPreviewItem);
+                Preview_recycler.setAdapter(mPreviewAdapter);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-
+                error.printStackTrace();
             }
         });
 
-queue.add(jsonArrayRequest);
+        queue.add(request);
     }
 
 
@@ -229,12 +236,17 @@ queue.add(jsonArrayRequest);
 
     @Override
     public void onBackPressed() {
-        Intent setIntent = new Intent(Intent.ACTION_MAIN);
-        setIntent.addCategory(Intent.CATEGORY_HOME);
-        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(setIntent);
+
+
         super.onBackPressed();
+        Toast.makeText(this, "Press back again to Leave!", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(Intent.ACTION_MAIN);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        finishAffinity();
+        finish();
     }
+
 
 
     /*
@@ -432,13 +444,21 @@ queue.add(jsonArrayRequest);
 
     private void UploadOImage(final Bitmap photo) {
         long milli = System.currentTimeMillis();
+
         final String Img_name = "INCI_IMG_" + milli + ".jpg";
+        pDialog = new SweetAlertDialog(DashbordMain.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Uploading");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
 
         String mUrl = "http://192.168.1.4:8000/predict";
         //our custom volley request
         VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, mUrl, new Response.Listener<NetworkResponse>() {
             @Override
             public void onResponse(NetworkResponse response) {
+                pDialog.dismissWithAnimation();
                 try {
                     JSONObject obj = new JSONObject(new String(response.data));
 
@@ -467,7 +487,9 @@ queue.add(jsonArrayRequest);
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        pDialog.dismissWithAnimation();
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+
                     }
                 }) {
 
@@ -502,6 +524,12 @@ queue.add(jsonArrayRequest);
     }
 
     private void Dbupload(final String label, final String color, final String path) {
+
+        pDialog = new SweetAlertDialog(DashbordMain.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("updating DB");
+        pDialog.setCancelable(false);
+        pDialog.show();
         pref = getSharedPreferences("SharedPref", Context.MODE_PRIVATE);
         final String session_id = pref.getString("session", null);
         //String dbUrl = "http://192.168.1.3:4000/Dress"+"?type_name="+type_name_data+"&user_id="+user_id_data;
@@ -509,12 +537,19 @@ queue.add(jsonArrayRequest);
         StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, dbUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                pDialog.dismissWithAnimation();
                 try {
                     Log.d("TAG", "  response.toString()");
                     JSONObject jsonObject = new JSONObject(response);
                     //jsonObject.put("image", path);
                     // jsonObject.put("type_name", label);
                     // jsonObject.put("color", color);
+                    new SweetAlertDialog(DashbordMain.this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText(" Success ")
+                            .setContentText("Images uploaded successfully ")
+                            .show();
+                    preview_Recycler();
+
                     Toast.makeText(DashbordMain.this, response.toString(), Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -525,6 +560,7 @@ queue.add(jsonArrayRequest);
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pDialog.dismissWithAnimation();
                 Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
