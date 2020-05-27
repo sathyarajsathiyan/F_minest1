@@ -32,15 +32,16 @@ public class Outfits extends Dashboard {
         shirt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Outfits.this,Shirt.class);
-                intent.putExtra("type_name","");
+                Intent intent = new Intent(Outfits.this,Tshirt.class);
+                intent.putExtra("type_name","shirt");
                 startActivity(intent);
             }
         });
         pullover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Outfits.this,Pullover.class);
+                Intent intent = new Intent(Outfits.this,Tshirt.class);
+                intent.putExtra("type_name","pullover");
                 startActivity(intent);
             }
         });
@@ -48,6 +49,7 @@ public class Outfits extends Dashboard {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Outfits.this,Coat.class);
+                intent.putExtra("type_name","coat");
                 startActivity(intent);
             }
         });
@@ -55,6 +57,7 @@ public class Outfits extends Dashboard {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Outfits.this,Trouser.class);
+                intent.putExtra("type_name","trouser");
                 startActivity(intent);
             }
         });

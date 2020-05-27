@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:background="#F1EEEE"
         android:elevation="8dp"
+        android:weightSum="2"
         android:orientation="vertical"
         android:padding="10dp">
 
@@ -27,15 +28,17 @@
             android:id="@+id/top_img"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_weight="1"
             android:layout_marginTop="5dp"
             android:src="@drawable/transparent_fanshion" />
 
         <ImageView
             android:id="@+id/button_img"
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_width="179dp"
+            android:layout_height="103dp"
             android:layout_margin="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
             android:src="@drawable/transparent_fanshion" />
 
 
