@@ -31,13 +31,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.minest1.HomeAdapter.FeaturedAdapter;
+import com.example.minest1.HomeAdapter.DressCombinationAdapter;
 import com.example.minest1.HomeAdapter.FeaturedHelperClass;
 import com.example.minest1.HomeAdapter.PreviewAdapter;
 import com.example.minest1.HomeAdapter.PreviewItem;
+import com.example.minest1.util.CombinationPoJo;
 import com.example.minest1.util.DataPart;
+import com.example.minest1.util.DressCombinationClass;
+import com.example.minest1.util.DressPoJo;
 import com.example.minest1.util.UrlClass;
 import com.example.minest1.util.VolleyMultipartRequest;
+import com.google.common.collect.Lists;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import org.json.JSONArray;
@@ -53,6 +57,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
@@ -76,7 +81,9 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     private File fileName;
     private RecyclerView Preview_recycler;
     private PreviewAdapter mPreviewAdapter;
+    private DressCombinationAdapter combinationAdapter;
     private ArrayList<PreviewItem> mPreviewItem;
+    private ArrayList<CombinationPoJo> mCombinationList ;
     private ImageView cameraImage;
     private String encodedString;
     SweetAlertDialog pDialog;
@@ -107,7 +114,10 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
             }
         });
         featuredRecycler = findViewById(R.id.featured_recycler);
-        featuredRecycler();
+        featuredRecycler.setHasFixedSize(true);
+        featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mCombinationList = new ArrayList<>();
+        DisplayCombinations();
         Preview_recycler = findViewById(R.id.preview_recycler);
         Preview_recycler.setHasFixedSize(true);
         Preview_recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -129,12 +139,10 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                 for (int i = 0; i < response.length(); i++) {
                     try {
 
-
                         JSONObject Dress = response.getJSONObject(i);
                         String imageUrl = UrlClass.IMAGE_BASE_URL + Dress.getString("image");
 
                         mPreviewItem.add(new PreviewItem(imageUrl));
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -157,22 +165,164 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
 
     private void featuredRecycler() {
+        pref = getSharedPreferences("SharedPref", Context.MODE_PRIVATE);
+        final String session_id = pref.getString("session", null);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        String date = simpleDateFormat.format(new Date());
         featuredRecycler.setHasFixedSize(true);
         featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
-        featuredLocations.add(new FeaturedHelperClass("http://192.168.1.4:4000/assets/images/1/5.jpeg", "http://i.imgur.com/DvpvklR.png"));
-        featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
-        featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
-        // featuredLocations.add(new FeaturedHelperClass(R.drawable.add,R.drawable.add,"Like","DisLike","Wear"));
-        //featuredLocations.add(new FeaturedHelperClass(null,null,"like","dislke","ware"));
+       // ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
+        //  featuredLocations.add(new FeaturedHelperClass("http://192.168.1.4:4000/assets/images/1/5.jpeg", "http://i.imgur.com/DvpvklR.png"));
+        //  featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
+        // featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
+        //String imageURL2 = "http://192.168.1.4:4000/assets/images/1/5.jpeg";
+        //String imageURl1 = "http://192.168.1.4:4000/assets/images/1/5.jpeg";
+        //String type_name1 = "shirt";
+        //String color1 = "red";
+        //String type_name2 = "top";
+        //String color2 = "yellow";
+        //uploadworn(imageURl1, imageURL2, date, type_name1, color1, type_name2, color2);
+        //adapter = new DressCombinationAdapter(featuredLocations, DashbordMain.this);
+        //featuredRecycler.setAdapter(adapter);
 
-        //From Picasso URL Loading
-        //Picasso.get().load("http://i.imgur.com/DvpvklR.png").into();
-
-        adapter = new FeaturedAdapter(featuredLocations);
-        featuredRecycler.setAdapter(adapter);
+//is this for displaying all combinations???????? yes bro and the select value just to click wether able upload are not
 
 
+    }
+
+
+    private void DisplayCombinations() {
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        final String Url = "http://192.168.1.4:4000/Dress";
+        // UrlClass obj = new UrlClass();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        final String date = simpleDateFormat.format(new Date());
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, Url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                //mCombinationList.clear();//shall i commettd i why?
+
+                List<DressPoJo> tops = new ArrayList<DressPoJo>();
+                List<DressPoJo> bots = new ArrayList<DressPoJo>();
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+
+                        JSONObject Dress = response.getJSONObject(i);
+                        String dress_type = Dress.getString("type_name");
+                        String imageUrl = UrlClass.IMAGE_BASE_URL + Dress.getString("image");
+//                        Toast.makeText(DashbordMain.this, "" + imageUrl, Toast.LENGTH_SHORT).show();
+                        if (dress_type.toLowerCase().equals( "t_shirt") || dress_type.toLowerCase().equals( "top" )|| dress_type.toLowerCase().equals( "coat") || dress_type.toLowerCase().equals("shirt") || dress_type.toLowerCase().equals("pullover")) {
+                            //Top
+
+                            tops.add(new DressPoJo(
+                                    imageUrl,
+                                    Dress.getString("type_name"),
+                                    Dress.getString("color"),
+                                    Dress.getString("user_id"),
+                                    Dress.getInt("id")
+                            ));
+                           // Toast.makeText(DashbordMain.this, "" + tops, Toast.LENGTH_SHORT).show();
+
+                        }
+                        else if (dress_type.toLowerCase().equals( "trouser")) {
+                            //Bottom// one doubt where we display the images here ??
+                            bots.add(new DressPoJo(
+                                    imageUrl,
+                                    Dress.getString("type_name"),
+                                    Dress.getString("color"),
+                                    Dress.getString("user_id"),
+                                    Dress.getInt("id")
+                            ));
+                           // Toast.makeText(DashbordMain.this, "" + tops, Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+
+                List<List<DressPoJo>> collection = new ArrayList<List<DressPoJo>>(2);
+                collection.add(tops);
+                collection.add(bots);
+
+                Set<List<DressPoJo>> combset = DressCombinationClass.getCombinations(collection);
+
+                List<List<DressPoJo>> comblist = convertToList(combset);
+
+                for (int i = 0; i < comblist.size(); i++) {
+                    List<DressPoJo> mlist = comblist.get(i);
+
+                    DressPoJo topItem = mlist.get(0);
+                    DressPoJo botItem = mlist.get(1);
+                    CombinationPoJo  combItem = new CombinationPoJo(topItem.getImage(), topItem.getColor(), topItem.getType_name(),
+                            botItem.getImage(), botItem.getColor(), botItem.getType_name(), date);
+                    mCombinationList.add(combItem);
+                }
+                combinationAdapter = new DressCombinationAdapter( getApplicationContext(),mCombinationList);
+                featuredRecycler.setAdapter(combinationAdapter);
+                combinationAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        queue.add(request);
+    }
+
+    // Generic function to convert set to list
+    public static <T> List<T> convertToList(Set<T> set) {
+        return Lists.newArrayList(set);
+    }
+
+    public void uploadworn(final String imageURl1, final String imageURL2, final String date, final String type_name1, final String color1, final String type_name2, final String color2) {
+        String dbUrl = "http://192.168.1.4:4000/Wornhis";
+        pref = getSharedPreferences("SharedPref", Context.MODE_PRIVATE);
+        final String session_id = pref.getString("session", null);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, dbUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Toast.makeText(DashbordMain.this, "updated", Toast.LENGTH_SHORT).show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", session_id);
+                params.put("image1", imageURl1);
+                params.put("type_name1", type_name1);
+                params.put("color1", color1);
+                params.put("image2", imageURL2);
+                params.put("type_name1", type_name2);
+                params.put("color1", color2);
+                params.put("date", date);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header = new HashMap<String, String>();
+                return header;
+            }
+
+        };
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 
     @Override

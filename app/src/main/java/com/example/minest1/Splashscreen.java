@@ -14,6 +14,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.minest1.util.DressCombinationClass;
+import com.example.minest1.util.DressPoJo;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 public class Splashscreen extends AppCompatActivity {
     private static int SPLASH_SCREEN = 5000;
     //variables
@@ -53,5 +61,84 @@ public class Splashscreen extends AppCompatActivity {
         },SPLASH_SCREEN);
 
 
+        //FOR TEST
+        List<DressPoJo> tops = new ArrayList<DressPoJo>();
+        List<DressPoJo> bots = new ArrayList<DressPoJo>();
+        DressPoJo dress;
+
+        //tops
+        tops.add(new DressPoJo(
+                "/assets/images/1/INCI_IMG_1590421872504.jpg",
+                "coat",
+                "White",
+                "1",
+                36
+        ));
+        tops.add(new DressPoJo(
+                "/assets/images/1/INCI_IMG_1590421872504.jpg",
+                "Shirt",
+                "White",
+                "1",
+                37
+        ));
+        tops.add(new DressPoJo(
+                "/assets/images/1/INCI_IMG_1590421872504.jpg",
+                "Shirt",
+                "Grey",
+                "1",
+                38
+        ));
+        tops.add(new DressPoJo(
+                "/assets/images/1/INCI_IMG_1590421872504.jpg",
+                "coat",
+                "Red",
+                "1",
+                39
+        ));
+        tops.add(new DressPoJo(
+                "/assets/images/1/INCI_IMG_1590421872504.jpg",
+                "pullover",
+                "Green",
+                "1",
+                40
+        ));
+        //bottom
+        bots.add(new DressPoJo(
+                "/assets/images/1/INCI_IMG_1590421872504.jpg",
+                "pyjama",
+                "Grey",
+                "1",
+                41
+        ));
+        bots.add(new DressPoJo(
+                "/assets/images/1/INCI_IMG_1590421872504.jpg",
+                "formals",
+                "Black",
+                "1",
+                42
+        ));
+        bots.add(new DressPoJo(
+                "/assets/images/1/INCI_IMG_1590421872504.jpg",
+                "jeans",
+                "Blue",
+                "1",
+                43
+        ));
+        bots.add(new DressPoJo(
+                "/assets/images/1/INCI_IMG_1590421872504.jpg",
+                "jeans",
+                "Light Grey",
+                "1",
+                44
+        ));
+
+        List<List<DressPoJo>> collection = new ArrayList<List<DressPoJo>>(2);
+        collection.add(tops);
+        collection.add(bots);
+
+       Set<List<DressPoJo>> combset =  DressCombinationClass.getCombinations(collection);
+
+       tops.clear();
+       bots.clear();
     }
 }

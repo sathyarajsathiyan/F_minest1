@@ -15,10 +15,10 @@ public class Outfits extends Dashboard {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_outfits);
         t_shirt = findViewById(R.id.t_shirt);
-       shirt=findViewById(R.id.shirt);
-       pullover=findViewById(R.id.pullover);
-       coat=findViewById(R.id.coat);
-       trouser=findViewById(R.id.trouser);
+        shirt=findViewById(R.id.shirt);
+        pullover=findViewById(R.id.pullover);
+        coat=findViewById(R.id.coat);
+        trouser=findViewById(R.id.trouser);
 
 
         t_shirt.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +48,7 @@ public class Outfits extends Dashboard {
         coat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Outfits.this,Coat.class);
+                Intent intent = new Intent(Outfits.this,Tshirt.class);
                 intent.putExtra("type_name","coat");
                 startActivity(intent);
             }
@@ -56,7 +56,7 @@ public class Outfits extends Dashboard {
         trouser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Outfits.this,Trouser.class);
+                Intent intent = new Intent(Outfits.this,Tshirt.class);
                 intent.putExtra("type_name","trouser");
                 startActivity(intent);
             }
