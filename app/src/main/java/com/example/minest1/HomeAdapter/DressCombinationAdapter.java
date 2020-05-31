@@ -13,10 +13,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Response;
 import com.example.minest1.DashbordMain;
 import com.example.minest1.R;
 import com.example.minest1.util.CombinationPoJo;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -27,7 +30,7 @@ public class DressCombinationAdapter extends RecyclerView.Adapter<DressCombinati
 
     public DressCombinationAdapter(Context context, ArrayList<CombinationPoJo> DressCombinations) {
         DressCombinationsPoJo = DressCombinations;
-        fContext = context;
+    fContext = (Context) context;
         this.notifyDataSetChanged();
 
 
@@ -47,6 +50,7 @@ public class DressCombinationAdapter extends RecyclerView.Adapter<DressCombinati
 
         //holder.img1.setImageResource(featuredHelperClass.getImg1());
         //holder.img2.setImageResource(featuredHelperClass.getImg2());
+
         String top_image = combination.getTop_image();
         String bottom_image = combination.getBottom_image();
         Picasso.get().load(top_image).fit().into(holder.img1);

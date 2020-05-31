@@ -83,7 +83,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     private PreviewAdapter mPreviewAdapter;
     private DressCombinationAdapter combinationAdapter;
     private ArrayList<PreviewItem> mPreviewItem;
-    private ArrayList<CombinationPoJo> mCombinationList ;
+    private ArrayList<CombinationPoJo> mCombinationList;
     private ImageView cameraImage;
     private String encodedString;
     SweetAlertDialog pDialog;
@@ -171,7 +171,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         String date = simpleDateFormat.format(new Date());
         featuredRecycler.setHasFixedSize(true);
         featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-       // ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
+        // ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
         //  featuredLocations.add(new FeaturedHelperClass("http://192.168.1.4:4000/assets/images/1/5.jpeg", "http://i.imgur.com/DvpvklR.png"));
         //  featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
         // featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
@@ -210,8 +210,11 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                         JSONObject Dress = response.getJSONObject(i);
                         String dress_type = Dress.getString("type_name");
                         String imageUrl = UrlClass.IMAGE_BASE_URL + Dress.getString("image");
-//                        Toast.makeText(DashbordMain.this, "" + imageUrl, Toast.LENGTH_SHORT).show();
-                        if (dress_type.toLowerCase().equals( "t_shirt") || dress_type.toLowerCase().equals( "top" )|| dress_type.toLowerCase().equals( "coat") || dress_type.toLowerCase().equals("shirt") || dress_type.toLowerCase().equals("pullover")) {
+                        String type_name = Dress.getString("type_name");
+                        String color = Dress.getString("color");
+                        String User_id = Dress.getString("user_id");
+                        Toast.makeText(DashbordMain.this, "" + date, Toast.LENGTH_SHORT).show();
+                        if (dress_type.toLowerCase().equals("t_shirt") || dress_type.toLowerCase().equals("top") || dress_type.toLowerCase().equals("coat") || dress_type.toLowerCase().equals("shirt") || dress_type.toLowerCase().equals("pullover")) {
                             //Top
 
                             tops.add(new DressPoJo(
@@ -220,11 +223,11 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                                     Dress.getString("color"),
                                     Dress.getString("user_id"),
                                     Dress.getInt("id")
-                            ));
-                           // Toast.makeText(DashbordMain.this, "" + tops, Toast.LENGTH_SHORT).show();
 
-                        }
-                        else if (dress_type.toLowerCase().equals( "trouser")) {
+                            ));
+                            // Toast.makeText(DashbordMain.this, "" + tops, Toast.LENGTH_SHORT).show();
+
+                        } else if (dress_type.toLowerCase().equals("trouser")) {
                             //Bottom// one doubt where we display the images here ??
                             bots.add(new DressPoJo(
                                     imageUrl,
@@ -233,8 +236,9 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                                     Dress.getString("user_id"),
                                     Dress.getInt("id")
                             ));
-                           // Toast.makeText(DashbordMain.this, "" + tops, Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(DashbordMain.this, "" + tops, Toast.LENGTH_SHORT).show();
                         }
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -242,7 +246,6 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
 
                 }
-
 
                 List<List<DressPoJo>> collection = new ArrayList<List<DressPoJo>>(2);
                 collection.add(tops);
@@ -253,17 +256,21 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                 List<List<DressPoJo>> comblist = convertToList(combset);
 
                 for (int i = 0; i < comblist.size(); i++) {
+
                     List<DressPoJo> mlist = comblist.get(i);
 
                     DressPoJo topItem = mlist.get(0);
                     DressPoJo botItem = mlist.get(1);
-                    CombinationPoJo  combItem = new CombinationPoJo(topItem.getImage(), topItem.getColor(), topItem.getType_name(),
+                    CombinationPoJo combItem = new CombinationPoJo(topItem.getImage(), topItem.getColor(), topItem.getType_name(),
                             botItem.getImage(), botItem.getColor(), botItem.getType_name(), date);
                     mCombinationList.add(combItem);
+
+
                 }
-                combinationAdapter = new DressCombinationAdapter( getApplicationContext(),mCombinationList);
+                combinationAdapter = new DressCombinationAdapter(DashbordMain.this, mCombinationList);
                 featuredRecycler.setAdapter(combinationAdapter);
                 combinationAdapter.notifyDataSetChanged();
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -280,7 +287,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         return Lists.newArrayList(set);
     }
 
-    public void uploadworn(final String imageURl1, final String imageURL2, final String date, final String type_name1, final String color1, final String type_name2, final String color2) {
+    public void uploadworn(final String top_imageURl1, final String bots_imageURL2, final String date, final String type_name1, final String color1, final String type_name2, final String color2) {
         String dbUrl = "http://192.168.1.4:4000/Wornhis";
         pref = getSharedPreferences("SharedPref", Context.MODE_PRIVATE);
         final String session_id = pref.getString("session", null);
@@ -305,11 +312,11 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_id", session_id);
-                params.put("image1", imageURl1);
+                params.put("image1", top_imageURl1);
                 params.put("type_name1", type_name1);
                 params.put("color1", color1);
-                params.put("image2", imageURL2);
-                params.put("type_name1", type_name2);
+                params.put("image2", bots_imageURL2);
+                params.put("type_name2", type_name2);
                 params.put("color1", color2);
                 params.put("date", date);
                 return params;
