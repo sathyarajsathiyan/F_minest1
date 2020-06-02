@@ -84,6 +84,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     private DressCombinationAdapter combinationAdapter;
     private ArrayList<PreviewItem> mPreviewItem;
     private ArrayList<CombinationPoJo> mCombinationList;
+    private ArrayList<CombinationPoJo> combinationList;
     private ImageView cameraImage;
     private String encodedString;
     SweetAlertDialog pDialog;
@@ -95,7 +96,13 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashbord_main);
         predict = findViewById(R.id.predict);
-
+        predict.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(DashbordMain.this,Predcit_Activity.class);
+                startActivity(intent);
+            }
+        });
         EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage), RC_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         camera = findViewById(R.id.camera);
         camera.setOnClickListener(new View.OnClickListener() {
@@ -107,16 +114,12 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
             }
         });
-        predict.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(DashbordMain.this, "Predict", Toast.LENGTH_SHORT).show();
-            }
-        });
+
         featuredRecycler = findViewById(R.id.featured_recycler);
         featuredRecycler.setHasFixedSize(true);
         featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mCombinationList = new ArrayList<>();
+        combinationList = new ArrayList<>();
         DisplayCombinations();
         Preview_recycler = findViewById(R.id.preview_recycler);
         Preview_recycler.setHasFixedSize(true);
@@ -130,13 +133,13 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
     private void preview_Recycler() {
         RequestQueue queue = Volley.newRequestQueue(this);
-        final String Url = "http://192.168.1.4:4000/Dress";
+        final String Url = "http://192.168.1.4:4000/Dress?_sort=id&_order=desc";
         // UrlClass obj = new UrlClass();
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, Url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 mPreviewItem.clear();
-                for (int i = 0; i < response.length(); i++) {
+                for (int i = 0; i <response.length(); i++) {
                     try {
 
                         JSONObject Dress = response.getJSONObject(i);
@@ -213,7 +216,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                         String type_name = Dress.getString("type_name");
                         String color = Dress.getString("color");
                         String User_id = Dress.getString("user_id");
-                        Toast.makeText(DashbordMain.this, "" + date, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(DashbordMain.this, "" + date, Toast.LENGTH_SHORT).show();
                         if (dress_type.toLowerCase().equals("t_shirt") || dress_type.toLowerCase().equals("top") || dress_type.toLowerCase().equals("coat") || dress_type.toLowerCase().equals("shirt") || dress_type.toLowerCase().equals("pullover")) {
                             //Top
 
@@ -250,6 +253,81 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                 List<List<DressPoJo>> collection = new ArrayList<List<DressPoJo>>(2);
                 collection.add(tops);
                 collection.add(bots);
+                List<String> redc = new ArrayList<String>(5);
+                redc.add("black");
+                redc.add("white");
+                redc.add("grey");
+                redc.add("blue");
+                redc.add("cyan");
+                List<String> orangec = new ArrayList<String>(5);
+                orangec.add("black");
+                orangec.add("white");
+                orangec.add("grey");
+                orangec.add("violet");
+                orangec.add("cyan");
+                List<String> yellowc = new ArrayList<String>(4);
+                yellowc.add("black");
+                yellowc.add("white");
+                yellowc.add("violet");
+                yellowc.add("grey");
+                List<String> greenc = new ArrayList<String>(3);
+                greenc.add("black");
+                greenc.add("white");
+                greenc.add("violet");
+                List<String> cyanc = new ArrayList<String>(5);
+                cyanc.add("black");
+                cyanc.add("white");
+                cyanc.add("grey");
+                cyanc.add("red");
+                cyanc.add("magenta");
+                List<String> bluec = new ArrayList<String>(4);
+                bluec.add("black");
+                bluec.add("white");
+                bluec.add("grey");
+                bluec.add("orange");
+                List<String> violetc = new ArrayList<String>(6);
+                violetc.add("black");
+                violetc.add("white");
+                violetc.add("grey");
+                violetc.add("orange");
+                violetc.add("yellow");
+                violetc.add("green");
+                List<String> brownc = new ArrayList<String>(3);
+                brownc.add("black");
+                brownc.add("white");
+                brownc.add("orange");
+                brownc.add("grey");
+                List<String> magentac = new ArrayList<String>(4);
+                magentac.add("white");
+                magentac.add("blue");
+                magentac.add("black");
+                magentac.add("grey");
+                List<String> whitec = new ArrayList<String>(8);
+                whitec.add("black");
+                whitec.add("blue");
+                whitec.add("red");
+                whitec.add("orange");
+                whitec.add("violet");
+                whitec.add("magenta");
+                whitec.add("yellow");
+                whitec.add("green");
+                List<String> blackc = new ArrayList<String>(8);
+                blackc.add("white");
+                blackc.add("blue");
+                blackc.add("red");
+                blackc.add("orange");
+                blackc.add("violet");
+                blackc.add("magenta");
+                blackc.add("green");
+                blackc.add("grey");
+                List<String> greyc = new ArrayList<String>(6);
+                greyc.add("black");
+                greyc.add("blue");
+                greyc.add("red");
+                greyc.add("orange");
+                greyc.add("violet");
+                greyc.add("magenta");
+
 
                 Set<List<DressPoJo>> combset = DressCombinationClass.getCombinations(collection);
 
@@ -258,18 +336,62 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                 for (int i = 0; i < comblist.size(); i++) {
 
                     List<DressPoJo> mlist = comblist.get(i);
+                    boolean q = false;
 
                     DressPoJo topItem = mlist.get(0);
                     DressPoJo botItem = mlist.get(1);
-                    CombinationPoJo combItem = new CombinationPoJo(topItem.getImage(), topItem.getColor(), topItem.getType_name(),
-                            botItem.getImage(), botItem.getColor(), botItem.getType_name(), date);
-                    mCombinationList.add(combItem);
+                    String tcolor = topItem.getColor();
+                    System.out.println("top:"+tcolor);
+                    String bc = botItem.getColor();
+                    String bcolor=bc.toLowerCase();
+                    System.out.println(bcolor);
+                    if (tcolor.toLowerCase().equals("red"))
+                        q = redc.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("yellow"))
+                        q = yellowc.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("orange"))
+                        q = orangec.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("green"))
+                        q = greenc.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("cyan"))
+                        q = cyanc.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("blue"))
+                        q = bluec.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("violet"))
+                        q = violetc.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("brown"))
+                        q = brownc.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("black"))
+                        q = blackc.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("grey"))
+                        q = greyc.contains(bcolor);
+                    else if (tcolor.toLowerCase().equals("white"))
+                        q = whitec.contains(bcolor);
+
+
+                    if (q == true) {
+                        CombinationPoJo combItem = new CombinationPoJo(topItem.getImage(), topItem.getColor(), topItem.getType_name(), botItem.getImage(), botItem.getColor(), botItem.getType_name(), date);
+                        combinationList.add(combItem);
+                    }
 
 
                 }
+                java.util.Random random = new java.util.Random();
+
+                for(int x=0;x<3;x++) {
+                    int random_computer_card = random.nextInt(combinationList.size());
+                    mCombinationList.add(combinationList.get(x));
+
+
+                }
+
                 combinationAdapter = new DressCombinationAdapter(DashbordMain.this, mCombinationList);
                 featuredRecycler.setAdapter(combinationAdapter);
                 combinationAdapter.notifyDataSetChanged();
+                // for(int x=0;x<3;x++)
+                //  {
+
+                //  }
 
             }
         }, new Response.ErrorListener() {
@@ -537,7 +659,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
     private void uploadImage() {
         RequestQueue rq = Volley.newRequestQueue(this);
-        String url = "http://0.0.0.0:9000/predict";
+        String url = "http://192.168.0.183:8000/predict";
         Log.d("URL", url);
         long milli = System.currentTimeMillis();
         final String Img_name = "INCI_IMG_" + milli + ".png";

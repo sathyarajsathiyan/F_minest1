@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -68,7 +69,9 @@ public class Tshirt extends AppCompatActivity {
 
                         JSONObject Dress = response.getJSONObject(i);
                         String imageUrl = UrlClass.IMAGE_BASE_URL + Dress.getString("image");
+                        String label=Dress.getString("type_name");
                         //Log.d("imageUrl", "imageUrl ");
+                        Toast.makeText(Tshirt.this, ""+label, Toast.LENGTH_SHORT).show();
                         mOutfitsItems.add(new OutfitsItem(imageUrl));
 
 
