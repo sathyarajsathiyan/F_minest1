@@ -25,11 +25,11 @@
                 android:text="Camera"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/predict"
+                app:layout_constraintStart_toEndOf="@+id/Predict_image"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
             <Button
-                android:id="@+id/predict"
+                android:id="@+id/Predict_image"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_button_predict"

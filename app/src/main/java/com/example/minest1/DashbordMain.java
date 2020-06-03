@@ -32,7 +32,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.minest1.HomeAdapter.DressCombinationAdapter;
-import com.example.minest1.HomeAdapter.FeaturedHelperClass;
 import com.example.minest1.HomeAdapter.PreviewAdapter;
 import com.example.minest1.HomeAdapter.PreviewItem;
 import com.example.minest1.util.CombinationPoJo;
@@ -95,11 +94,11 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashbord_main);
-        predict = findViewById(R.id.predict);
+        predict = findViewById(R.id.Predict_image);
         predict.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(DashbordMain.this,Predcit_Activity.class);
+                Intent intent = new Intent(DashbordMain.this, Predcit_Activity.class);
                 startActivity(intent);
             }
         });
@@ -139,7 +138,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
             @Override
             public void onResponse(JSONArray response) {
                 mPreviewItem.clear();
-                for (int i = 0; i <response.length(); i++) {
+                for (int i = 0; i < response.length(); i++) {
                     try {
 
                         JSONObject Dress = response.getJSONObject(i);
@@ -153,7 +152,8 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
 
 
                 }
-                mPreviewAdapter = new PreviewAdapter(getApplicationContext(), mPreviewItem);
+                mPreviewAdapter = new PreviewAdapter(DashbordMain.this, mPreviewItem);
+                //mPreviewAdapter = new PreviewAdapter(DashbordMain.this, mPreviewItem);
                 Preview_recycler.setAdapter(mPreviewAdapter);
             }
         }, new Response.ErrorListener() {
@@ -167,31 +167,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
     }
 
 
-    private void featuredRecycler() {
-        pref = getSharedPreferences("SharedPref", Context.MODE_PRIVATE);
-        final String session_id = pref.getString("session", null);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        String date = simpleDateFormat.format(new Date());
-        featuredRecycler.setHasFixedSize(true);
-        featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        // ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
-        //  featuredLocations.add(new FeaturedHelperClass("http://192.168.1.4:4000/assets/images/1/5.jpeg", "http://i.imgur.com/DvpvklR.png"));
-        //  featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
-        // featuredLocations.add(new FeaturedHelperClass("http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"));
-        //String imageURL2 = "http://192.168.1.4:4000/assets/images/1/5.jpeg";
-        //String imageURl1 = "http://192.168.1.4:4000/assets/images/1/5.jpeg";
-        //String type_name1 = "shirt";
-        //String color1 = "red";
-        //String type_name2 = "top";
-        //String color2 = "yellow";
-        //uploadworn(imageURl1, imageURL2, date, type_name1, color1, type_name2, color2);
-        //adapter = new DressCombinationAdapter(featuredLocations, DashbordMain.this);
-        //featuredRecycler.setAdapter(adapter);
 
-//is this for displaying all combinations???????? yes bro and the select value just to click wether able upload are not
-
-
-    }
 
 
     private void DisplayCombinations() {
@@ -228,7 +204,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                                     Dress.getInt("id")
 
                             ));
-                            // Toast.makeText(DashbordMain.this, "" + tops, Toast.LENGTH_SHORT).show();
+
 
                         } else if (dress_type.toLowerCase().equals("trouser")) {
                             //Bottom// one doubt where we display the images here ??
@@ -341,9 +317,9 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                     DressPoJo topItem = mlist.get(0);
                     DressPoJo botItem = mlist.get(1);
                     String tcolor = topItem.getColor();
-                    System.out.println("top:"+tcolor);
+                    System.out.println("top:" + tcolor);
                     String bc = botItem.getColor();
-                    String bcolor=bc.toLowerCase();
+                    String bcolor = bc.toLowerCase();
                     System.out.println(bcolor);
                     if (tcolor.toLowerCase().equals("red"))
                         q = redc.contains(bcolor);
@@ -378,7 +354,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                 }
                 java.util.Random random = new java.util.Random();
 
-                for(int x=0;x<3;x++) {
+                for (int x = 0; x < 3; x++) {
                     int random_computer_card = random.nextInt(combinationList.size());
                     mCombinationList.add(combinationList.get(x));
 

@@ -50,6 +50,7 @@ public class Tshirt extends AppCompatActivity {
             TShirt_recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
             mOutfitsItems = new ArrayList<>();
             Listoutfits(type_name, session_id);
+            Toast.makeText(Tshirt.this, ""+type_name, Toast.LENGTH_SHORT).show();
 
         }
 
@@ -71,7 +72,7 @@ public class Tshirt extends AppCompatActivity {
                         String imageUrl = UrlClass.IMAGE_BASE_URL + Dress.getString("image");
                         String label=Dress.getString("type_name");
                         //Log.d("imageUrl", "imageUrl ");
-                        Toast.makeText(Tshirt.this, ""+label, Toast.LENGTH_SHORT).show();
+
                         mOutfitsItems.add(new OutfitsItem(imageUrl));
 
 
