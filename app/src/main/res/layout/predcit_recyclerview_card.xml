@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:background="#FFF"
             android:orientation="horizontal"
-            android:weightSum="2">
+            >
 
 
             <Button
@@ -53,20 +53,7 @@
                 android:textColor="#4CAF50"
                 android:textSize="20sp" />
 
-            <Button
-                android:id="@+id/trash"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:padding="2dp"
-                android:text="Trash   "
-                android:textAlignment="center"
-                android:textColor="#E91E63"
-                android:textSize="20sp"
 
-                />
 
         </LinearLayout>
     </LinearLayout>

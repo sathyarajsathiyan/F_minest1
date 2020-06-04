@@ -25,6 +25,7 @@ public class PopUpPredcitAdapter extends RecyclerView.Adapter<PopUpPredcitAdapte
 
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
+
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -53,7 +54,7 @@ public class PopUpPredcitAdapter extends RecyclerView.Adapter<PopUpPredcitAdapte
         String popimageUrl = CurrentItem.getImageUrl();
 
         Picasso.get().load(popimageUrl).fit().into(holder.pop_Image);
-
+        //this.notifyItemChanged(position);
 
     }
 

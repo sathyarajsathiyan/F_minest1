@@ -58,8 +58,8 @@ public class DressCombinationAdapter extends RecyclerView.Adapter<DressCombinati
         holder.trash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TAG", "onClick:Trash ");
-                Toast.makeText(v.getContext(), "Trash", Toast.LENGTH_SHORT).show();
+                ((DashbordMain) fContext).uploadLike(combination.getTop_image(), combination.getBottom_image(), combination.getWear_date(),
+                        combination.getTop_type(), combination.getTop_color(), combination.getBottom_type(), combination.getBottom_color());
 
             }
         });

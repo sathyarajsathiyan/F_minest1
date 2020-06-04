@@ -412,7 +412,50 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                 params.put("color1", color1);
                 params.put("image2", bots_imageURL2);
                 params.put("type_name2", type_name2);
-                params.put("color1", color2);
+                params.put("color2", color2);
+                params.put("date", date);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header = new HashMap<String, String>();
+                return header;
+            }
+
+        };
+        Volley.newRequestQueue(this).add(stringRequest);
+    }public void uploadLike(final String top_imageURl1, final String bots_imageURL2, final String date, final String type_name1, final String color1, final String type_name2, final String color2) {
+        String dbUrl = "http://192.168.1.4:4000/Like";
+        pref = getSharedPreferences("SharedPref", Context.MODE_PRIVATE);
+        final String session_id = pref.getString("session", null);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, dbUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Toast.makeText(DashbordMain.this, "updated", Toast.LENGTH_SHORT).show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", session_id);
+                params.put("image1", top_imageURl1);
+                params.put("type_name1", type_name1);
+                params.put("color1", color1);
+                params.put("image2", bots_imageURL2);
+                params.put("type_name2", type_name2);
+                params.put("color2", color2);
                 params.put("date", date);
                 return params;
             }

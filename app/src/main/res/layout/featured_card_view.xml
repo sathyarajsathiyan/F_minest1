@@ -28,8 +28,8 @@
             android:id="@+id/img2"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:layout_margin="5dp"
             android:layout_gravity="center"
+            android:layout_margin="5dp"
             android:src="@drawable/transparent_fanshion" />
 
         <LinearLayout
@@ -61,7 +61,7 @@
                 android:layout_weight="1"
                 android:background="#fff"
                 android:padding="2dp"
-                android:text="Trash   "
+                android:text="Like   "
                 android:textAlignment="center"
                 android:textColor="#E91E63"
                 android:textSize="20sp"

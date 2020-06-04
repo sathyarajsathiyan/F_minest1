@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.minest1.DashbordMain;
+import com.example.minest1.Predcit_Activity;
 import com.example.minest1.R;
 import com.example.minest1.util.CombinationPoJo;
 import com.squareup.picasso.Picasso;
@@ -50,21 +51,14 @@ public class PredcitCombinatonnAdapter extends RecyclerView.Adapter<PredcitCombi
         String bottom_image = combination.getBottom_image();
         Picasso.get().load(top_image).fit().into(holder.topImage);
         Picasso.get().load(bottom_image).fit().into(holder.botImage);
-        holder.trash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TAG", "onClick:Trash ");
-                Toast.makeText(v.getContext(), "Trash", Toast.LENGTH_SHORT).show();
 
-            }
-        });
         holder.worn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
 
-                ((DashbordMain) fContext).uploadworn(combination.getTop_image(), combination.getBottom_image(), combination.getWear_date(),
+                ((Predcit_Activity) fContext).uploadworn(combination.getTop_image(), combination.getBottom_image(), combination.getWear_date(),
                         combination.getTop_type(), combination.getTop_color(), combination.getBottom_type(), combination.getBottom_color());
 
 
@@ -90,7 +84,7 @@ public class PredcitCombinatonnAdapter extends RecyclerView.Adapter<PredcitCombi
             topImage = itemView.findViewById(R.id.top_image);
             botImage = itemView.findViewById(R.id.bottom_images);
 
-            trash = itemView.findViewById(R.id.trash);
+
             worn = itemView.findViewById(R.id.worn);
         }
     }
