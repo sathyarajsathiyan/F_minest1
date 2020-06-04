@@ -84,7 +84,7 @@
             tools:ignore="MissingConstraints" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/featured_recycler"
+            android:id="@+id/Predict_recycler"
             android:layout_width="380dp"
             android:layout_height="400dp"
             android:layout_marginStart="5dp"

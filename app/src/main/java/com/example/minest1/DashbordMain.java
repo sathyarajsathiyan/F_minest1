@@ -364,10 +364,7 @@ public class DashbordMain extends Dashboard implements EasyPermissions.Permissio
                 combinationAdapter = new DressCombinationAdapter(DashbordMain.this, mCombinationList);
                 featuredRecycler.setAdapter(combinationAdapter);
                 combinationAdapter.notifyDataSetChanged();
-                // for(int x=0;x<3;x++)
-                //  {
 
-                //  }
 
             }
         }, new Response.ErrorListener() {
